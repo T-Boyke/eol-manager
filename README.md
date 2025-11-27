@@ -228,6 +228,13 @@ Bitte lies unsere CONTRIBUTING.md für Details zu unserem Code of Conduct und de
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
+### 🛡️ Sicherheit
+
+Bitte melde Sicherheitslücken **nicht** in den öffentlichen Issues.
+Sende stattdessen eine E-Mail an [deine-email@example.com] oder nutze den Security-Tab im Repository.
+
+<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
+
 ### 📄 Lizenz
 Veröffentlicht unter der MIT Lizenz. Siehe LICENSE für weitere Informationen.
 
