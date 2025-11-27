@@ -143,14 +143,17 @@ cp .env.example .env
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ## 💻 Entwicklung & Commands
+
 Dieses Projekt nutzt ein Makefile, um häufige Befehle zu standardisieren. Hier sind die wichtigsten Commands:
-Befehl,Beschreibung,Äquivalent
-make help,Zeigt alle verfügbaren Befehle an,-
-make install,Installiert alle Abhängigkeiten,npm install
-make dev,Startet den lokalen Dev-Server,npm start
-make test,Führt die Test-Suite aus,npm test
-make build,Erstellt einen Production-Build,npm run build
-make clean,"Löscht temporäre Ordner (dist, coverage)",rm -rf ...
+
+| Befehl | Beschreibung | Äquivalent |
+| :--- | :--- | :--- |
+| `make help` | Zeigt alle verfügbaren Befehle an | - |
+| `make install` | Installiert alle Abhängigkeiten | `npm install` |
+| `make dev` | Startet den lokalen Dev-Server | `npm start` |
+| `make test` | Führt die Test-Suite aus | `npm test` |
+| `make build` | Erstellt einen Production-Build | `npm run build` |
+| `make clean` | Löscht temporäre Ordner (dist, coverage) | `rm -rf ...` |
 
 Manueller Start (ohne Make):
 ```Bash
@@ -181,12 +184,16 @@ Jeder Push auf main oder Pull Request durchläuft automatisch unsere GitHub Acti
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ## 🗺 Roadmap
+
 Hier ist der aktuelle Plan für zukünftige Features:
-[x] Initiales Setup & Architektur
-[x] CI/CD Pipeline Integration
-[ ] [Feature A]: Implementierung von [Details]
-[ ] [Feature B]: Mehrsprachigkeit (i18n)
-[ ] [Feature C]: Dark Mode SupportSiehe die offenen Issues für eine vollständige Liste.
+
+- [x] Initiales Setup & Architektur
+- [x] CI/CD Pipeline Integration
+- [ ] [Feature A]: Implementierung von [Details]
+- [ ] [Feature B]: Mehrsprachigkeit (i18n)
+- [ ] [Feature C]: Dark Mode Support
+
+Siehe die offenen Issues für eine vollständige Liste.
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
