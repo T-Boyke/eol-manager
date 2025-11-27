@@ -138,7 +138,8 @@ make install
 cp .env.example .env
 ```
 2. Trage deine API-Schlüssel und Konfigurationen in die .env Datei ein.
-    ⚠️ Wichtig: Die .env Datei wird von Git ignoriert und darf niemals commitet werden!
+
+⚠️ Wichtig: Die .env Datei wird von Git ignoriert und darf niemals commitet werden!
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
@@ -164,6 +165,7 @@ npm start
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ## 🧪 Testing & Qualitätssicherung
+
 Wir legen großen Wert auf Code-Qualität.
 **Unit Tests**
 Führen Sie die Unit-Tests aus, um die Logik einzelner Komponenten zu prüfen.
