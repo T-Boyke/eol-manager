@@ -1,3 +1,5 @@
+<a name="readme-top"></a>
+
 <br />
 <div align="center">
   <a href="https://github.com/T-Boyke/[REPO_NAME]">
@@ -53,10 +55,11 @@
     </li>
     <li><a href="#-nutzung">Nutzung</a></li>
     <li><a href="#-entwicklung--commands">Entwicklung & Commands</a></li>
+    <li><a href="#-testing--qualitätssicherung">Testing</a></li>
     <li><a href="#-roadmap">Roadmap</a></li>
     <li><a href="#-mitwirken">Mitwirken</a></li>
     <li><a href="#-lizenz">Lizenz</a></li>
-    <li><a href="#-kontakt">Kontakt</a></li>
+    <li><a href="#-kontakt--support">Kontakt</a></li>
   </ol>
 </details>
 
@@ -110,7 +113,7 @@ Ein Überblick über die wichtigsten Verzeichnisse und Dateien:
 ├── CHANGELOG.md             # Versionshistorie
 └── README.md                # Projektbeschreibung
 ```
-## 🚀 Getting Started
+### 🚀 Getting Started
 Folge diesen Schritten, um eine lokale Kopie des Projekts zum Laufen zu bringen.
 **Voraussetzungen**
 Stelle sicher, dass folgende Tools auf deinem System installiert sind:
@@ -143,7 +146,7 @@ cp .env.example .env
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 💻 Entwicklung & Commands
+### 💻 Entwicklung & Commands
 
 Dieses Projekt nutzt ein Makefile, um häufige Befehle zu standardisieren. Hier sind die wichtigsten Commands:
 
@@ -164,7 +167,7 @@ npm start
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 🧪 Testing & Qualitätssicherung
+### 🧪 Testing & Qualitätssicherung
 
 Wir legen großen Wert auf Code-Qualität.
 **Unit Tests**
@@ -185,7 +188,7 @@ Jeder Push auf main oder Pull Request durchläuft automatisch unsere GitHub Acti
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 🗺 Roadmap
+### 🗺 Roadmap
 
 Hier ist der aktuelle Plan für zukünftige Features:
 
@@ -199,7 +202,7 @@ Siehe die offenen Issues für eine vollständige Liste.
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 🤝 Mitwirken
+### 🤝 Mitwirken
 Beiträge sind das Herz der Open-Source-Community. Wir freuen uns über jeden Pull Request!
 
 Bitte lies unsere CONTRIBUTING.md für Details zu unserem Code of Conduct und dem Prozess für das Einreichen von Pull Requests.
@@ -211,12 +214,12 @@ Bitte lies unsere CONTRIBUTING.md für Details zu unserem Code of Conduct und de
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 📄 Lizenz
+### 📄 Lizenz
 Veröffentlicht unter der MIT Lizenz. Siehe LICENSE für weitere Informationen.
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-## 📞 Kontakt & Support
+### 📞 Kontakt & Support
 Projekt Maintainer: [Dein Name] - [verdächtiger Link entfernt]
 Projekt Link: https://github.com/T-Boyke/[REPO_NAME]
 
