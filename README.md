@@ -1,5 +1,6 @@
 <a name="readme-top"></a>
 
+---
 ### 📝 Verwendung dieses Templates
 Nachdem du dieses Template mit dem Button **"Use this template"** erstellt hast, führe folgende Schritte durch:
 
@@ -8,6 +9,7 @@ Nachdem du dieses Template mit dem Button **"Use this template"** erstellt hast,
 3. Aktualisiere die `package.json` (Name, Version, Autor).
 4. Bearbeite die `.env.example` passend zu deinem Projekt.
 5. Lösche diesen Abschnitt aus der README.
+---
 
 <br />
 <div align="center">
