@@ -1,0 +1,8 @@
+enabled: true
+api_route: /eol-api
+dashboard_route: /eol-dashboard
+cors:
+  enabled: true
+  allow_origin: "*"
+  allow_methods: "GET, POST, OPTIONS"
+  allow_headers: "Content-Type, Authorization"

@@ -1,0 +1,71 @@
+name: EOL Manager
+version: 1.0.0
+description: "Manages Ocean Data for EOL Project"
+icon: ship
+author:
+  name: "Antigravity"
+  email: "bot@example.com"
+homepage: https://github.com/getgrav/grav-plugin-eol-manager
+keywords: grav, plugin, eol, education, ocean
+bugs: https://github.com/getgrav/grav-plugin-eol-manager/issues
+docs: https://github.com/getgrav/grav-plugin-eol-manager/blob/develop/README.md
+license: MIT
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    section_api:
+      type: section
+      title: API Settings
+      underline: true
+
+    api_route:
+      type: text
+      label: API Route Base
+      default: /eol-api
+      help: The base route for the API endpoints (e.g. /eol-api/data)
+
+    cors.enabled:
+      type: toggle
+      label: Enable CORS
+      help: Allow Cross-Origin Resource Sharing (needed for Angular dev server)
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
+
+    cors.allow_origin:
+      type: text
+      label: Allowed Origin
+      default: "*"
+      help: The domain allowed to access the API (e.g. http://localhost:4200 or *)
+
+    section_dashboard:
+      type: section
+      title: Dashboard Settings
+      underline: true
+
+    dashboard_route:
+      type: text
+      label: Dashboard Route
+      default: /eol-dashboard
+      help: The URL path where the teacher dashboard will be accessible
+
+    info_link:
+      type: display
+      label: Quick Link
+      content: '<div class="info-block"><a href="/eol-dashboard" target="_blank" class="button"><i class="fa fa-external-link"></i> Open Dashboard</a></div>'

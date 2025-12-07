@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Data Manager</title>
+    
+    <!-- Load Plugin Assets directly via Grav Stream or relative path if possible, 
+         but inside a raw template, standard assets twig might fail if not fully initialized.
+         We will use simple style injection for robustness here since we are hijacking the route.
+    -->
+    <style>
+        /* Embedding Dashboard CSS directly to ensure it loads without Grav Asset Manager issues on standalone route */
+        .eol-dashboard { font-family: 'Segoe UI', sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f9f9f9; color: #333; }
+        .eol-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #0077be; padding-bottom: 10px; }
+        .eol-header h1 { color: #0077be; margin: 0; }
+        .ocean-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .ocean-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s; }
+        .ocean-card:hover { transform: translateY(-5px); }
+        .ocean-header { height: 150px; background-size: cover; background-position: center; position: relative; }
+        .ocean-title { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.6); color: white; padding: 10px; margin: 0; }
+        .ocean-body { padding: 15px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #0077be; color: white; text-decoration: none; border-radius: 4px; cursor: pointer; border: none; font-size: 1rem; }
+        .btn:hover { background: #005f99; }
+        .editor-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input[type="text"], .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .form-group textarea { min-height: 100px; }
+        .status-message { padding: 10px; margin-bottom: 20px; border-radius: 4px; display: none; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+<div class="eol-dashboard">
+    <div id="dashboard-view">
+        <div class="eol-header">
+            <h1>Ocean Data Manager</h1>
+        </div>
+        <div id="ocean-list" class="ocean-list">
+            <!-- Loaded via JS -->
+            <p>Lade Daten...</p>
+        </div>
+    </div>
+
+    <div id="editor-view" style="display:none;" class="editor-container">
+        <div class="eol-header">
+            <h2>Bearbeite Ozean</h2>
+            <button type="button" id="cancel-btn" class="btn" style="background:#666;">Zurück</button>
+        </div>
+        <form id="editor-form">
+            <input type="hidden" id="edit-id">
+            
+            <div class="form-group">
+                <label>Aktuelles Bild</label>
+                <div id="image-preview-container" style="margin-bottom:10px;">
+                    <img id="edit-image-preview" src="" alt="Vorschau" style="max-width: 100%; height: auto; max-height: 200px; border-radius: 4px; border: 1px solid #ddd;">
+                </div>
+                <label for="edit-image">Bild-Pfad</label>
+                <input type="text" id="edit-image" placeholder="/assets/images/..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-name">Name</label>
+                <input type="text" id="edit-name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-description">Beschreibung</label>
+                <textarea id="edit-description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-color">Farbe (Tailwind Klasse)</label>
+                <input type="text" id="edit-color" placeholder="bg-blue-500">
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Fakten</h3>
+                <button type="button" id="add-fact-btn" class="btn" style="background:#17a2b8; font-size:0.9rem;">+ Fakt hinzufügen</button>
+            </div>
+            <div id="facts-editor-container"></div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Bewohner</h3>
+                <button type="button" id="add-inhabitant-btn" class="btn" style="background:#17a2b8; font-size:0.9rem;">+ Bewohner hinzufügen</button>
+            </div>
+            <div id="inhabitants-editor-container"></div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>Quiz Fragen</h3>
+                <button type="button" id="add-question-btn" class="btn" style="background:#28a745; font-size:0.9rem;">+ Frage hinzufügen</button>
+            </div>
+            
+            <div id="quiz-editor-container">
+                <!-- Quiz questions injected here -->
+            </div>
+
+            <div class="form-actions" style="margin-top: 20px;">
+                <button type="submit" class="btn">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const apiBase = '/eol-api'; 
+        const assetBase = '/user/plugins/eol-manager'; 
+        let oceanData = [];
+
+        const dashboardView = document.getElementById('dashboard-view');
+        const editorView = document.getElementById('editor-view');
+        const oceanList = document.getElementById('ocean-list');
+        const editorForm = document.getElementById('editor-form');
+        
+        const quizContainer = document.getElementById('quiz-editor-container');
+        const factsContainer = document.getElementById('facts-editor-container');
+        const inhabitantsContainer = document.getElementById('inhabitants-editor-container');
+
+        // Initial image preview update listener
+        document.getElementById('edit-image').addEventListener('input', function(e) {
+            updatePreview(e.target.value, 'edit-image-preview');
+        });
+
+        document.getElementById('add-question-btn').addEventListener('click', function() {
+            addQuizQuestion();
+        });
+
+        document.getElementById('add-fact-btn').addEventListener('click', function() {
+            addFact('');
+        });
+
+        document.getElementById('add-inhabitant-btn').addEventListener('click', function() {
+            addInhabitant({name:'', description:'', image:''});
+        });
+
+        function updatePreview(path, imgId) {
+            const img = document.getElementById(imgId);
+            if (!img) return;
+            
+            if (!path) {
+                img.parentElement.style.display = 'none';
+                return;
+            }
+            img.parentElement.style.display = 'block';
+
+            if (path.startsWith('http')) {
+                img.src = path;
+            } else {
+                img.src = assetBase + (path.startsWith('/') ? path : '/' + path);
+            }
+        }
+
+        fetch(apiBase + '/data')
+            .then(response => response.json())
+            .then(data => {
+                oceanData = data;
+                renderDashboard();
+            })
+            .catch(err => console.error('Error fetching data:', err));
+
+        function renderDashboard() {
+            oceanList.innerHTML = '';
+            oceanData.forEach(ocean => {
+                const card = document.createElement('div');
+                card.className = 'ocean-card';
+                // Fix Image Path: Prepend plugin path
+                const imgPath = assetBase + (ocean.oceanimage.startsWith('/') ? ocean.oceanimage : '/' + ocean.oceanimage);
+                
+                card.innerHTML = `
+                    <div class="ocean-header" style="background-image: url('${imgPath}')">
+                        <h3 class="ocean-title">${ocean.name}</h3>
+                    </div>
+                    <div class="ocean-body">
+                        <p>${ocean.description}</p>
+                        <button class="btn edit-btn" data-id="${ocean.id}">Bearbeiten</button>
+                    </div>
+                `;
+                oceanList.appendChild(card);
+            });
+
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    openEditor(id);
+                });
+            });
+        }
+
+        function openEditor(id) {
+            const ocean = oceanData.find(o => o.id === id);
+            if (!ocean) return;
+            
+            document.getElementById('edit-id').value = ocean.id;
+            document.getElementById('edit-name').value = ocean.name;
+            document.getElementById('edit-description').value = ocean.description;
+            document.getElementById('edit-image').value = ocean.oceanimage;
+            document.getElementById('edit-color').value = ocean.color || '';
+            updatePreview(ocean.oceanimage, 'edit-image-preview');
+            
+            // Render Facts
+            factsContainer.innerHTML = '';
+            (ocean.facts || []).forEach(f => addFact(f));
+
+            // Render Inhabitants
+            inhabitantsContainer.innerHTML = '';
+            (ocean.inhabitants || []).forEach(i => addInhabitant(i));
+
+            // Render Quiz Editor
+            renderQuizEditor(ocean.quiz || []);
+
+            dashboardView.style.display = 'none';
+            editorView.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function renderQuizEditor(quiz) {
+            quizContainer.innerHTML = '';
+            quiz.forEach((q, index) => {
+                appendQuestionHtml(index, q);
+            });
+        }
+
+        function addFact(factText) {
+            const div = document.createElement('div');
+            div.className = 'fact-item form-group';
+            div.style.position = 'relative';
+            div.innerHTML = `
+                <input type="text" class="fact-input" value="${factText}" placeholder="Ein interessanter Fakt..." style="width: 90%;">
+                <button type="button" class="btn-del" style="position:absolute; right:0; top:0; background:#dc3545; color:white; border:none; width:30px; height:30px; border-radius:4px; cursor:pointer;">&times;</button>
+            `;
+            div.querySelector('.btn-del').onclick = () => div.remove();
+            factsContainer.appendChild(div);
+        }
+
+        function addInhabitant(data) {
+            const div = document.createElement('div');
+            div.className = 'inhabitant-item';
+            div.style.background = '#e9ecef';
+            div.style.padding = '10px';
+            div.style.marginBottom = '10px';
+            div.style.borderRadius = '4px';
+            div.style.position = 'relative';
+
+            const uniqueId = 'inh-' + Math.random().toString(36).substr(2, 9);
+
+            // Preview logic
+             const imgPath = data.image ? (data.image.startsWith('http') ? data.image : assetBase + (data.image.startsWith('/') ? data.image : '/' + data.image)) : '';
+             const imgDisplay = data.image ? 'block' : 'none';
+
+            div.innerHTML = `
+                <button type="button" class="btn-del" style="position:absolute; top:5px; right:5px; background:#dc3545; color:white; border:none; width:25px; height:25px; border-radius:50%; cursor:pointer;">&times;</button>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="inh-name" value="${data.name}" required>
+                </div>
+                <div class="form-group">
+                    <label>Beschreibung</label>
+                    <input type="text" class="inh-desc" value="${data.description}">
+                </div>
+                <div class="form-group">
+                    <label>Bild-Pfad</label>
+                    <input type="text" class="inh-image" id="${uniqueId}-input" value="${data.image}" placeholder="/assets/images/...">
+                    <div style="margin-top:5px; display:${imgDisplay};">
+                        <img id="${uniqueId}-preview" src="${imgPath}" style="max-height:80px; border:1px solid #ccc;">
+                    </div>
+                </div>
+            `;
+            
+            div.querySelector('.btn-del').onclick = () => div.remove();
+
+            const imgInput = div.querySelector(`#${uniqueId}-input`);
+            imgInput.addEventListener('input', (e) => updatePreview(e.target.value, `${uniqueId}-preview`));
+
+            inhabitantsContainer.appendChild(div);
+        }
+
+        function addQuizQuestion() {
+            const index = document.querySelectorAll('.quiz-item').length;
+            const emptyQ = { question: '', answer: '', options: [], trivia: '', quizimage: '', prequizdescription: '' };
+            appendQuestionHtml(index, emptyQ);
+        }
+
+        function appendQuestionHtml(index, q) {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'quiz-item';
+            qDiv.style.background = '#f0f0f0';
+            qDiv.style.padding = '15px';
+            qDiv.style.marginBottom = '15px';
+            qDiv.style.borderRadius = '4px';
+            qDiv.style.position = 'relative';
+
+            const uniqueId = 'quiz-' + Math.random().toString(36).substr(2, 9);
+
+            // Delete button for question
+            const delBtn = document.createElement('button');
+            delBtn.innerHTML = '&times;';
+            delBtn.style.position = 'absolute';
+            delBtn.style.top = '10px';
+            delBtn.style.right = '10px';
+            delBtn.style.background = '#dc3545';
+            delBtn.style.color = 'white';
+            delBtn.style.border = 'none';
+            delBtn.style.borderRadius = '50%';
+            delBtn.style.width = '25px';
+            delBtn.style.height = '25px';
+            delBtn.style.cursor = 'pointer';
+            delBtn.onclick = function() { qDiv.remove(); };
+
+            qDiv.appendChild(delBtn);
+
+            const optionsVal = Array.isArray(q.options) ? q.options.join(', ') : '';
+
+            // Image Preview Logic for Quiz
+            const imgPath = q.quizimage ? (q.quizimage.startsWith('http') ? q.quizimage : assetBase + (q.quizimage.startsWith('/') ? q.quizimage : '/' + q.quizimage)) : '';
+            const imgDisplay = q.quizimage ? 'block' : 'none';
+
+            qDiv.innerHTML += `
+                <div class="form-group">
+                    <label>Frage ${index + 1}</label>
+                    <input type="text" class="quiz-question" value="${q.question}" placeholder="Frage eingeben" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Intro-Text (Pre-Quiz Description)</label>
+                    <input type="text" class="quiz-prequiz" value="${q.prequizdescription || ''}" placeholder="Kurzer Einleitungstext...">
+                </div>
+
+                <div class="form-group">
+                    <label>Bild-Pfad (Quiz Image)</label>
+                    <input type="text" class="quiz-image-path" id="${uniqueId}-input" value="${q.quizimage || ''}" placeholder="/assets/images/...">
+                    <div style="margin-top:5px; display:${imgDisplay};">
+                        <img id="${uniqueId}-preview" src="${imgPath}" class="quiz-image-preview" style="max-height:100px; border:1px solid #ccc;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Antwort (Richtig)</label>
+                    <input type="text" class="quiz-answer" value="${q.answer}" placeholder="Die richtige Antwort" required>
+                </div>
+                <div class="form-group">
+                    <label>Optionen (Komma-getrennt)</label>
+                    <input type="text" class="quiz-options" value="${optionsVal}" placeholder="Option 1, Option 2, Option 3, Option 4" required>
+                </div>
+                <div class="form-group">
+                    <label>Trivia (Zusatzinfo)</label>
+                    <input type="text" class="quiz-trivia" value="${q.trivia || ''}" placeholder="Interessanter Fakt nach der Antwort">
+                </div>
+            `;
+            
+            // Add listener for local preview update
+            const imgInput = qDiv.querySelector(`#${uniqueId}-input`);
+            imgInput.addEventListener('input', (e) => updatePreview(e.target.value, `${uniqueId}-preview`));
+
+            quizContainer.appendChild(qDiv);
+        }
+
+        document.getElementById('cancel-btn').addEventListener('click', () => {
+            editorView.style.display = 'none';
+            dashboardView.style.display = 'block';
+        });
+
+        editorForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const oceanIndex = oceanData.findIndex(o => o.id === id);
+
+            if (oceanIndex > -1) {
+                // Update Basic Data
+                oceanData[oceanIndex].name = document.getElementById('edit-name').value;
+                oceanData[oceanIndex].description = document.getElementById('edit-description').value;
+                oceanData[oceanIndex].oceanimage = document.getElementById('edit-image').value;
+                oceanData[oceanIndex].color = document.getElementById('edit-color').value;
+
+                // Update Facts
+                oceanData[oceanIndex].facts = Array.from(document.querySelectorAll('.fact-input')).map(input => input.value).filter(v => v.trim() !== '');
+
+                // Update Inhabitants
+                oceanData[oceanIndex].inhabitants = Array.from(document.querySelectorAll('.inhabitant-item')).map(div => {
+                    return {
+                        name: div.querySelector('.inh-name').value,
+                        description: div.querySelector('.inh-desc').value,
+                        image: div.querySelector('.inh-image').value
+                    };
+                });
+
+                // Update Quiz Data
+                const quizItems = document.querySelectorAll('.quiz-item');
+                let newQuiz = [];
+                quizItems.forEach(item => {
+                    const question = item.querySelector('.quiz-question').value;
+                    const answer = item.querySelector('.quiz-answer').value;
+                    const optionsStr = item.querySelector('.quiz-options').value;
+                    const trivia = item.querySelector('.quiz-trivia').value;
+                    const prequiz = item.querySelector('.quiz-prequiz').value;
+                    const quizimage = item.querySelector('.quiz-image-path').value;
+                    
+                    const options = optionsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+
+                    newQuiz.push({
+                        question: question,
+                        prequizdescription: prequiz,
+                        quizimage: quizimage,
+                        answer: answer,
+                        options: options,
+                        trivia: trivia
+                    });
+                });
+                
+                oceanData[oceanIndex].quiz = newQuiz;
+
+                saveData(oceanData);
+            }
+        });
+
+        function saveData(data) {
+            fetch(apiBase + '/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Daten erfolgreich gespeichert!'); 
+                    editorView.style.display = 'none';
+                    dashboardView.style.display = 'block';
+                    renderDashboard();
+                } else {
+                    alert('Fehler beim Speichern!');
+                }
+            })
+            .catch(err => {
+                console.error('Save error:', err);
+                alert('Netzwerkfehler beim Speichern.');
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
