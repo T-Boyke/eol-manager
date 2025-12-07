@@ -1,46 +1,28 @@
 <a name="readme-top"></a>
 
----
-### 📝 Verwendung dieses Templates
-Nachdem du dieses Template mit dem Button **"Use this template"** erstellt hast, führe folgende Schritte durch:
-
-1. Suche und ersetze alle Vorkommen von `[REPO_NAME]` mit deinem Projektnamen.
-2. Suche und ersetze `[DEIN_USER]` mit deinem GitHub-Username.
-3. Aktualisiere die `package.json` (Name, Version, Autor).
-4. Bearbeite die `.env.example` passend zu deinem Projekt.
-5. Lösche diesen Abschnitt aus der README.
----
-
 <br />
 <div align="center">
-  <a href="https://github.com/[DEIN_USER]/[REPO_NAME]">
-    <img src="docs/assets/logo.png" alt="Logo" width="120" height="120">
+  <a href="https://github.com/T-Boyke/eol-manager">
+    <img src="https://getgrav.org/images/grav-logo.svg" alt="Logo" width="120" height="120">
   </a>
 
-  <h1 align="center">[PROJEKT TITEL]</h1>
+  <h1 align="center">EOL Manager Plugin</h1>
 
   <p align="center">
-    <strong>[Ein prägnanter Slogan oder Einzeiler, der das Projekt beschreibt]</strong>
+    <strong>Verwaltet Ozean-Daten, Fakten und Quizfragen für das "Earth Ocean Learning" Projekt.</strong>
     <br />
     <br />
-    <a href="https://[DEIN_USER].github.io/[REPO_NAME]"><strong>Dokumentation »</strong></a>
-    <br />
-    <br />
-    <a href="#-demo">Live Demo</a>
+    <a href="#-nutzung">Dokumentation »</a>
     ·
-    <a href="https://github.com/[DEIN_USER]/[REPO_NAME]/issues/new?template=bug_report.md">Bug melden</a>
-    ·
-    <a href="https://github.com/[DEIN_USER]/[REPO_NAME]/issues/new?template=feature_request.md">Feature anfragen</a>
+    <a href="https://github.com/T-Boyke/eol-manager/issues">Bug melden</a>
   </p>
 </div>
 
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/[DEIN_USER]/[REPO_NAME])](https://github.com/[DEIN_USER]/[REPO_NAME]/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/[DEIN_USER]/[REPO_NAME])](https://github.com/[DEIN_USER]/[REPO_NAME]/pulls)
+[![GitHub Issues](https://img.shields.io/github/issues/T-Boyke/eol-manager)](https://github.com/T-Boyke/eol-manager/issues)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![CI Build](https://github.com/[DEIN_USER]/[REPO_NAME]/actions/workflows/ci.yml/badge.svg)](https://github.com/[DEIN_USER]/[REPO_NAME]/actions)
 
 </div>
 
@@ -51,26 +33,13 @@ Nachdem du dieses Template mit dem Button **"Use this template"** erstellt hast,
   <ol>
     <li>
       <a href="#-über-das-projekt">Über das Projekt</a>
-      <ul>
-        <li><a href="#-technologie-stack">Technologie Stack</a></li>
-        <li><a href="#-projektstruktur">Projektstruktur</a></li>
-      </ul>
     </li>
     <li>
-      <a href="#-getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#voraussetzungen">Voraussetzungen</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#umgebungsvariablen">Umgebungsvariablen</a></li>
-      </ul>
+      <a href="#-installation">Installation</a>
     </li>
-    <li><a href="#-nutzung">Nutzung</a></li>
-    <li><a href="#-entwicklung--commands">Entwicklung & Commands</a></li>
-    <li><a href="#-testing--qualitätssicherung">Testing</a></li>
-    <li><a href="#-roadmap">Roadmap</a></li>
-    <li><a href="#-mitwirken">Mitwirken</a></li>
+    <li><a href="#-features">Features</a></li>
+    <li><a href="#-entwicklung">Entwicklung</a></li>
     <li><a href="#-lizenz">Lizenz</a></li>
-    <li><a href="#-kontakt--support">Kontakt</a></li>
   </ol>
 </details>
 
@@ -78,174 +47,77 @@ Nachdem du dieses Template mit dem Button **"Use this template"** erstellt hast,
 
 ## 💡 Über das Projekt
 
-[![Produkt Screenshot](docs/assets/screenshot.png)](https://[deine-demo-url].com)
+**EOL Manager** ist ein Grav CMS Plugin, das als Backend für die "Earth Ocean Learning" Angular App dient. Es stellt eine grafische Oberfläche für Lehrer bereit, um:
+*   Ozean-Daten zu bearbeiten (Texte, Farben).
+*   Bilder hochzuladen und auszuwählen.
+*   Quizfragen und Fakten zu verwalten.
 
-[Hier kommt der ausführliche Elevator-Pitch hin. Beschreibe das Problem, das dieses Projekt löst. Warum hast du es gebaut? Was unterscheidet es von existierenden Lösungen? Halte diesen Teil inspirierend.]
+Die Daten werden als JSON gespeichert und über eine REST-API (`/eol-api/data`) bereitgestellt.
 
 **Hauptfunktionen:**
-* ✅ **[Feature 1]:** [Kurze Beschreibung, z.B. Echtzeit-Synchronisation]
-* ✅ **[Feature 2]:** [Kurze Beschreibung, z.B. Offline-Support]
-* ✅ **[Feature 3]:** [Kurze Beschreibung, z.B. Modulare Architektur]
-* ✅ **[Feature 4]:** [Kurze Beschreibung, z.B. Barrierefreiheit nach WCAG]
+* ✅ **Dashboard:** Eigenständige Oberfläche ohne Theme-Abhängigkeit.
+* ✅ **API:** JSON-Endpunkte für die Angular App (`GET /eol-api/data`, `POST /eol-api/save`).
+* ✅ **CORS Support:** Ermöglicht Zugriff von `localhost:4200`.
+* ✅ **Daten-Persistenz:** Speichert sicher in `user/data/eol-manager/`.
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ### 🛠 Technologie Stack
 
-Dieses Projekt setzt auf moderne, robuste Technologien:
-
-| Komponente | Technologie | Beschreibung / Version |
-| :--- | :--- | :--- |
-| **Core** | [z.B. Angular] | [Frontend Framework (v17+)] |
-| **Language** | [z.B. TypeScript] | [Strict Typing für Skalierbarkeit] |
-| **Styling** | [z.B. Tailwind CSS] | [Utility-First CSS Framework] |
-| **State** | [z.B. Signals / NgRx] | [Reaktives State Management] |
-| **Build** | [z.B. Vite / Esbuild] | [High-Performance Bundler] |
-| **CI/CD** | GitHub Actions | Automatisierte Tests & Deployments |
+| Komponente | Technologie |
+| :--- | :--- |
+| **CMS** | [Grav CMS](https://getgrav.org) |
+| **Backend** | PHP 8.x |
+| **Frontend** | HTML5, JavaScript (Vanilla), Inline CSS |
+| **Templating** | Twig |
+| **Daten** | JSON Flat File |
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ### 📂 Projektstruktur
 
-Ein Überblick über die wichtigsten Verzeichnisse und Dateien:
-
 ```text
-[REPO_NAME]/
-├── .github/                 # GitHub Templates, Actions & Dependabot Config
-├── docs/                    # Dokumentation & Assets
-├── src/                     # Quellcode der Anwendung
-│   ├── app/                 # Hauptlogik / Komponenten
-│   ├── assets/              # Statische Dateien (Bilder, Fonts)
-│   └── environments/        # Umgebungskonfigurationen
-├── tests/                   # Test-Dateien (Unit & E2E)
-├── .editorconfig            # Coding Style Definitionen
-├── .gitignore               # Ignorierte Git-Dateien
-├── Makefile                 # Shortcut-Befehle für Entwicklung
-├── CHANGELOG.md             # Versionshistorie
-└── README.md                # Projektbeschreibung
-```
-### 🚀 Getting Started
-Folge diesen Schritten, um eine lokale Kopie des Projekts zum Laufen zu bringen.
-
-**Voraussetzungen:**
-
-Stelle sicher, dass folgende Tools auf deinem System installiert sind:
-- **Git** (Download)
-- **[Laufzeitumgebung, z.B. Node.js]** (v20.x oder höher empfohlen)
-- **[Paketmanager, z.B. npm]** (v10.x oder höher)
-
-```Bash
-npm install npm@latest -g
+user/plugins/eol-manager/
+├── admin/                   # Admin-spezifische Assets (falls vorhanden)
+├── assets/                  # Bilder und CSS für das Dashboard
+├── classes/                 # PHP Klassen (DataService.php)
+├── data/                    # Seed-Daten (ocean-data.json)
+├── templates/               # Twig Templates (eol_dashboard.html.twig)
+├── blueprints.yaml          # Admin Panel Konfiguration
+├── eol-manager.php          # Haupt-Plugin-Logik
+├── eol-manager.yaml         # Plugin Standard-Konfiguration
+└── README.md                # Diese Datei
 ```
 
-**Installation**
-1. **Repository klonen**
-```Bash
-git clone [https://github.com/](https://github.com/)[DEIN_USER]/[REPO_NAME].git
-cd [REPO_NAME]
-```
-2. **Abhängigkeiten installieren** Wir nutzen ein Makefile zur Vereinfachung (siehe unten), oder Standard-Befehle:
-```Bash
-make install
-# Alternativ: npm install / pip install -r requirements.txt
-```
-**Umgebungsvariablen** 
-1. Kopiere die Beispiel-Konfiguration:
-```Bash
-cp .env.example .env
-```
-2. Trage deine API-Schlüssel und Konfigurationen in die .env Datei ein.
+### 🚀 Installation
 
-⚠️ Wichtig: Die .env Datei wird von Git ignoriert und darf niemals commitet werden!
+1.  **Download:**
+    Lade das Plugin herunter oder klone es in deinen `user/plugins/` Ordner:
+    ```bash
+    cd user/plugins
+    git clone https://github.com/T-Boyke/eol-manager.git
+    ```
+
+2.  **Aktivieren:**
+    Das Plugin sollte automatisch erkannt und aktiviert werden. Prüfe dies im Grav Admin Panel unter "Plugins".
+
+3.  **Konfiguration:**
+    Rufe die Plugin-Einstellungen auf, um API-Routen oder CORS-Header anzupassen.
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
-### 💻 Entwicklung & Commands
+### 💻 Entwicklung
 
-Dieses Projekt nutzt ein Makefile, um häufige Befehle zu standardisieren. Hier sind die wichtigsten Commands:
+**Dashboard öffnen:**
+Rufe `http://deine-grav-url/eol-dashboard` auf, um die Verwaltungsoberfläche zu sehen.
 
-| Befehl | Beschreibung | Äquivalent |
-| :--- | :--- | :--- |
-| `make help` | Zeigt alle verfügbaren Befehle an | - |
-| `make install` | Installiert alle Abhängigkeiten | `npm install` |
-| `make dev` | Startet den lokalen Dev-Server | `npm start` |
-| `make test` | Führt die Test-Suite aus | `npm test` |
-| `make build` | Erstellt einen Production-Build | `npm run build` |
-| `make clean` | Löscht temporäre Ordner (dist, coverage) | `rm -rf ...` |
-
-Manueller Start (ohne Make):
-```Bash
-npm start
-# Server läuft unter http://localhost:4200
-```
-
-<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
-
-### 🧪 Testing & Qualitätssicherung
-
-Wir legen großen Wert auf Code-Qualität.
-**Unit Tests**
-Führen Sie die Unit-Tests aus, um die Logik einzelner Komponenten zu prüfen.
-```Bash
-make test
-```
-**Linting & Formatting**
-Wir nutzen [ESLint/Prettier/Ruff], um Code-Konsistenz zu gewährleisten.
-```Bash
-npm run lint
-```
-**CI/CD Pipeline**
-Jeder Push auf main oder Pull Request durchläuft automatisch unsere GitHub Actions Pipeline:
-1. **Build:** Prüft, ob der Code kompiliert.
-2. **Test:** Führt alle Unit-Tests aus.
-3. **Audit:** Prüft Abhängigkeiten auf Sicherheitslücken (via Dependabot).
-
-<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
-
-### 🗺 Roadmap
-
-Hier ist der aktuelle Plan für zukünftige Features:
-
-- [x] Initiales Setup & Architektur
-- [x] CI/CD Pipeline Integration
-- [ ] [Feature A]: Implementierung von [Details]
-- [ ] [Feature B]: Mehrsprachigkeit (i18n)
-- [ ] [Feature C]: Dark Mode Support
-
-Siehe die offenen Issues für eine vollständige Liste.
-
-<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
-
-### 🤝 Mitwirken
-Beiträge sind das Herz der Open-Source-Community. Wir freuen uns über jeden Pull Request!
-
-Bitte lies unsere CONTRIBUTING.md für Details zu unserem Code of Conduct und dem Prozess für das Einreichen von Pull Requests.
-1. Forke das Projekt
-2. Erstelle deinen Feature Branch (git checkout -b feature/AmazingFeature)
-3. Committe deine Änderungen (git commit -m 'feat: Add some AmazingFeature') - Wir nutzen Conventional Commits!
-4. Pushe in den Branch (git push origin feature/AmazingFeature)
-5. Öffne einen Pull Request
-
-<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
-
-### 🛡️ Sicherheit
-
-Bitte melde Sicherheitslücken **nicht** in den öffentlichen Issues.
-Sende stattdessen eine E-Mail an [deine-email@example.com] oder nutze den Security-Tab im Repository.
+**API testen:**
+*   GET: `http://deine-grav-url/eol-api/data`
+*   POST: `http://deine-grav-url/eol-api/save` (Body: JSON)
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
 
 ### 📄 Lizenz
 Veröffentlicht unter der MIT Lizenz. Siehe LICENSE für weitere Informationen.
-
-<p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
-
-### 📞 Kontakt & Support
-Projekt Maintainer: [Dein Name] - [verdächtiger Link entfernt]
-Projekt Link: https://github.com/[DEIN_USER]/[REPO_NAME]
-
-<br />
-
-<div align="center"><h3>Gefällt dir das Projekt?</h3><a href="https://www.buymeacoffee.com/[DEIN_USER]"><img src="https://www.google.com/search?q=https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="180"></a></div>
 
 <p align="right">(<a href="#readme-top">zurück nach oben</a>)</p>
